@@ -1,5 +1,5 @@
 import {Server, reportDebug, middleware} from 'node-server-engine';
-import { testEndpoint } from 'endpoints';
+import * as endpoints from 'endpoints';
 
 reportDebug.setNameSpace('~~namespace~~');
 
@@ -7,6 +7,6 @@ reportDebug.setNameSpace('~~namespace~~');
 export function createServer(): Server {
   return new Server({
     globalMiddleware: [middleware.swaggerDocs()],
-    endpoints: [testEndpoint]
+    endpoints: Object.values(endpoints)
   });
 }
