@@ -6,28 +6,12 @@ import {
 } from 'node-server-engine';
 import bcrypt from 'bcryptjs';
 import { Response } from 'express';
-import { User } from 'db';
-
-export const registerHandler: EndpointHandler<EndpointAuthType> = async (
-  req: EndpointRequestType[EndpointAuthType],
-  res: Response
-) => {
-  const { name, email, password, role } = req.body;
-  try {
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await User.create({
-      name,
-      email,
-      password: hashedPassword,
-      role
-    });
-    res
-      .status(201)
-      .json({ message: 'User created successfully', userId: user.id });
-  } catch (error) {
-    res.status(500).json({ message: 'Error creating user', error });
-  }
-};
+import { Permission, Role, User } from 'db';
+import {
+  AUTH_INVALID_CREDENTIALS,
+  AUTH_LOGIN_ERROR,
+  AUTH_USER_NOT_FOUND
+} from './auth.const';
 
 export const loginHandler: EndpointHandler<EndpointAuthType> = async (
   req: EndpointRequestType[EndpointAuthType],
@@ -37,37 +21,70 @@ export const loginHandler: EndpointHandler<EndpointAuthType> = async (
   try {
     const user = await User.findOne({
       where: { email },
-      attributes: ['id', 'name', 'email', 'role', 'password'],
+      attributes: ['id', 'password'],
       raw: true
     });
+
     if (!user) {
-      res.status(401).json({ message: 'Invalid credentials' });
+      res.status(401).json({ message: AUTH_USER_NOT_FOUND });
       return;
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      res.status(401).json({ message: 'Invalid credentials' });
+      res.status(401).json({ message: AUTH_INVALID_CREDENTIALS });
       return;
     }
 
+    const userDetails = (
+      await User.findOne({
+        where: { id: user.id },
+        attributes: ['id', 'firstName', 'lastName', 'email'],
+        include: [
+          {
+            model: Role,
+            attributes: ['id', 'name'],
+            include: [
+              {
+                model: Permission,
+                through: { attributes: [] },
+                attributes: ['action']
+              }
+            ]
+          }
+        ]
+      })
+    )?.toJSON();
+
+    // Check if userDetails or userDetails.role is null
+    if (!userDetails || !userDetails.role) {
+       res
+        .status(500)
+        .json({
+          message: AUTH_LOGIN_ERROR,
+          error: 'User role or permissions not found'
+        });
+        return;
+    }
+
+    // Transform the user object
+    const transformedUser = {
+      id: userDetails.id,
+      firstName: userDetails.firstName,
+      lastName: userDetails.lastName,
+      email: userDetails.email,
+      roleId: userDetails.role.id,
+      role: userDetails.role.name,
+      permissions: userDetails.role.permissions.map(
+        (perm: { action: string }) => perm.action
+      )
+    };
+
     const tokenExpiry = Math.floor(Date.now() / 1000) + 60 * 60;
-    const accessToken = generateJwtToken(user);
+    const accessToken = generateJwtToken(transformedUser);
 
-    const { password: _, ...userWithoutPassword } = user;
-
-    res
-      .status(200)
-      .json({ accessToken, tokenExpiry, user: userWithoutPassword });
+    res.status(200).json({ accessToken, tokenExpiry, user:transformedUser });
   } catch (error) {
-    res.status(500).json({ message: 'Login error', error });
+    res.status(500).json({ message: AUTH_LOGIN_ERROR, error });
   }
-};
-
-export const logoutHandler: EndpointHandler<EndpointAuthType> = async (
-  req: EndpointRequestType[EndpointAuthType],
-  res: Response
-) => {
-  // Here you might want to implement logic to blacklist the token or handle session
-  res.status(200).json({ message: 'User logged out successfully' });
 };

@@ -23,9 +23,6 @@ User:
       type: integer
     managerId:
       type: integer
-    dateOfJoining:
-      type: string
-      format: date-time
     position:
       type: string
     employmentType:

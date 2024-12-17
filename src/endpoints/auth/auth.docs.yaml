@@ -1,67 +1,9 @@
-/auth/register:
-  post:
-    summary: Register a new user
-    tags: 
-      - Auth
-    requestBody:
-      required: true
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              name:
-                type: string
-                minLength: 2
-                example: 'Ram Mahendran'
-              email:
-                type: string
-                format: email
-                example: 'ram.mahendran@example.com'
-              password:
-                type: string
-                minLength: 6
-                example: 'securepassword'
-              role:
-                type: string
-                enum: [admin, manager, employee]
-                example: 'admin'
-            required:
-              - name
-              - email
-              - password
-              - role
-    responses:
-      '201':
-        description: User registered successfully
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                message:
-                  type: string
-                  example: 'User registered successfully'
-      '400':
-        description: Validation error
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                errors:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      msg:
-                        type: string
-                        example: 'Email is required'
-
 /auth/login:
   post:
-    summary: Login a user
-    tags: 
+    summary: Login user and generate JWT token
+    description: Authenticates a user and returns an access token along with user information.
+    operationId: login
+    tags:
       - Auth
     requestBody:
       required: true
@@ -73,17 +15,64 @@
               email:
                 type: string
                 format: email
-                example: 'ram.mahendran@example.com'
+                description: The user's email address.
               password:
                 type: string
-                minLength: 6
-                example: 'securepassword'
+                description: The user's password.
             required:
               - email
               - password
     responses:
       '200':
-        description: Login successful
+        description: Successful login, returns access token and user details
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                  description: JWT token for authenticating future requests.
+                tokenExpiry:
+                  type: integer
+                  description: The expiry time of the JWT token in Unix timestamp.
+                user:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      description: User ID
+                    firstName:
+                      type: string
+                      description: First name of the user
+                    lastName:
+                      type: string
+                      description: Last name of the user
+                    email:
+                      type: string
+                      description: Email of the user
+                    role:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: Role ID
+                        name:
+                          type: string
+                          description: Role name
+                        permissions:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                                description: Permission ID
+                              action:
+                                type: string
+                                description: Action associated with the permission
+      '400':
+        description: Bad request, validation failed
         content:
           application/json:
             schema:
@@ -91,12 +80,9 @@
               properties:
                 message:
                   type: string
-                  example: 'Login successful'
-                token:
-                  type: string
-                  example: 'your_jwt_token'
+                  example: "Email is required"
       '401':
-        description: Invalid credentials
+        description: Unauthorized, invalid credentials
         content:
           application/json:
             schema:
@@ -104,18 +90,9 @@
               properties:
                 message:
                   type: string
-                  example: 'Invalid credentials'
-
-/auth/logout:
-  post:
-    summary: Logout a user
-    tags: 
-      - Auth
-    security:
-      - bearerAuth: []
-    responses:
-      '200':
-        description: User logged out successfully
+                  example: "Invalid credentials"
+      '500':
+        description: Internal server error
         content:
           application/json:
             schema:
@@ -123,14 +100,8 @@
               properties:
                 message:
                   type: string
-                  example: 'User logged out successfully'
-      '401':
-        description: Unauthorized
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                message:
+                  example: "Login error"
+                error:
                   type: string
-                  example: 'Unauthorized access'
+                  example: "Error details"
+    security: []

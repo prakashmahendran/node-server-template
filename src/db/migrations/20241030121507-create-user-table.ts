@@ -1,89 +1,75 @@
-import { QueryInterface, DataTypes, literal } from 'sequelize';
+import { QueryInterface, DataTypes, Sequelize } from 'sequelize';
 
 export async function up(queryInterface: QueryInterface): Promise<void> {
-  // Create the users table
+  // Create the 'Users' table
   await queryInterface.createTable('Users', {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true
     },
-    name: {
+    firstName: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    email: {
+    lastName: {
       type: DataTypes.STRING,
+      allowNull: false
+    },
+    email: {      type: DataTypes.STRING,
       allowNull: false,
       unique: true
     },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    profilePic: {
-      type: DataTypes.BLOB, // Using BLOB for profile pictures
+    dateOfBirth: {
+      type: DataTypes.DATE,
       allowNull: true
     },
     phoneNumber: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    role: {
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    address: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    destination: {
+    qualification: {
       type: DataTypes.STRING,
       allowNull: true
     },
-    department: {
-      type: DataTypes.STRING,
+    profilePic: {
+      type: DataTypes.BLOB, // Using BLOB for profile pictures
       allowNull: true
     },
-    dateOfJoining: {
-      type: DataTypes.DATE,
-      allowNull: true
-    },
-    position: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    employmentType: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    dateOfTermination: {
-      type: DataTypes.DATE,
-      allowNull: true
-    },
-    reasonForTermination: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-    createdBy: {
+    roleId: {
       type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    updatedBy: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    createdAt: {
-      type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: literal('CURRENT_TIMESTAMP')
+      references: { model: 'Roles', key: 'id' },
+      onUpdate: 'CASCADE' // Correct use of onUpdate as 'CASCADE'
     },
-    updatedAt: {
-      type: DataTypes.DATE,
+    accountStatus: {
+      type: DataTypes.ENUM('active', 'inactive', 'suspended'),
       allowNull: false,
-      defaultValue: literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')
-    }
+      defaultValue: 'active'
+    },
+    lastLogin: { type: DataTypes.DATE, allowNull: true },
+    createdBy: { type: DataTypes.INTEGER, allowNull: true },
+    updatedBy: { type: DataTypes.INTEGER, allowNull: true },
+    createdAt: { type: DataTypes.DATE, allowNull: false },
+    updatedAt: { type: DataTypes.DATE, allowNull: false }
   });
+
+  await queryInterface.sequelize.query(`
+    ALTER TABLE Users
+    MODIFY createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    MODIFY updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL;
+  `);
 }
 
 export async function down(queryInterface: QueryInterface): Promise<void> {
-
-  // Drop the users table
+  // Drop the 'Users' table
   await queryInterface.dropTable('Users');
 }
