@@ -1,9 +1,4 @@
-import {
-  Endpoint,
-  EndpointMethod,
-  EndpointAuthType,
-  checkPermission
-} from 'node-server-engine';
+import { Endpoint, EndpointMethod, EndpointAuthType, middleware } from 'node-server-engine';
 import {
   createRoleValidator,
   updateRoleValidator,
@@ -30,7 +25,7 @@ export const getRoleDetailsEndpoint = new Endpoint({
   handler: getRoleDetailsHandler,
   authType: EndpointAuthType.JWT,
   validator: {},
-  middleware: [checkPermission('GetRole')]
+  middleware: [middleware.checkPermission('GetRole')]
 });
 
 export const getRolesEndpoint = new Endpoint({
@@ -39,7 +34,7 @@ export const getRolesEndpoint = new Endpoint({
   handler: getRolesHandler,
   authType: EndpointAuthType.JWT,
   validator: {},
-  middleware: [checkPermission('GetRole')]
+  middleware: [middleware.checkPermission('GetRole')]
 });
 
 export const createRoleEndpoint = new Endpoint({
@@ -48,7 +43,7 @@ export const createRoleEndpoint = new Endpoint({
   handler: createRoleHandler,
   authType: EndpointAuthType.JWT,
   validator: createRoleValidator,
-  middleware: [checkPermission('CreateRole')]
+  middleware: [middleware.checkPermission('CreateRole')]
 });
 
 export const updateRoleEndpoint = new Endpoint({
@@ -57,7 +52,7 @@ export const updateRoleEndpoint = new Endpoint({
   handler: updateRoleHandler,
   authType: EndpointAuthType.JWT,
   validator: updateRoleValidator,
-  middleware: [checkPermission('UpdateRole')]
+  middleware: [middleware.checkPermission('UpdateRole')]
 });
 
 export const deleteRoleEndpoint = new Endpoint({
@@ -66,7 +61,7 @@ export const deleteRoleEndpoint = new Endpoint({
   handler: deleteRoleHandler,
   authType: EndpointAuthType.JWT,
   validator: deleteRoleValidator,
-  middleware: [checkPermission('DeleteRole')]
+  middleware: [middleware.checkPermission('DeleteRole')]
 });
 
 export const getPermissionsEndpoint = new Endpoint({
@@ -75,7 +70,7 @@ export const getPermissionsEndpoint = new Endpoint({
   handler: getPermissionsHandler,
   authType: EndpointAuthType.JWT,
   validator: {},
-  middleware: [checkPermission('GetPermission')]
+  middleware: [middleware.checkPermission('GetPermission')]
 });
 
 export const createPermissionEndpoint = new Endpoint({
@@ -84,7 +79,7 @@ export const createPermissionEndpoint = new Endpoint({
   handler: createPermissionHandler,
   authType: EndpointAuthType.JWT,
   validator: createPermissionValidator,
-  middleware: [checkPermission('CreatePermission')]
+  middleware: [middleware.checkPermission('CreatePermission')]
 });
 
 export const updatePermissionEndpoint = new Endpoint({
@@ -93,7 +88,7 @@ export const updatePermissionEndpoint = new Endpoint({
   handler: updatePermissionHandler,
   authType: EndpointAuthType.JWT,
   validator: updatePermissionValidator,
-  middleware: [checkPermission('UpdatePermission')]
+  middleware: [middleware.checkPermission('UpdatePermission')]
 });
 
 export const deletePermissionEndpoint = new Endpoint({
@@ -102,5 +97,5 @@ export const deletePermissionEndpoint = new Endpoint({
   handler: deletePermissionHandler,
   authType: EndpointAuthType.JWT,
   validator: deletePermissionValidator,
-  middleware: [checkPermission('DeletePermission')]
+  middleware: [middleware.checkPermission('DeletePermission')]
 });

@@ -12,7 +12,7 @@ createServer()
     await sequelize.init();
     const modelArray = Object.values(models);
     await sequelize.addModels(modelArray);
-    if(process.env.DB_MIGRATION?.toLowerCase()==='true'){
+    if(process.env.RUN_DB_MIGRATION?.toLowerCase()==='true'){
       console.log('Db Migration Started');
       await runPendingMigrations();
     }
