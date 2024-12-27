@@ -81,13 +81,13 @@
             properties:
               firstName:
                 type: string
-                example: Sakthi
+                example: Ram
               lastName:
                 type: string
                 example: M
               email:
                 type: string
-                example: Sakthi.M@example.com
+                example: Ram.M@example.com
               phoneNumber:
                 type: string
                 example: "1234567890"
