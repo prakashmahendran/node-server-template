@@ -36,11 +36,11 @@
   "homepage": "https://github.com/prakashmahendran/~~name~~/#readme",
   "dependencies": {
     "@babel/runtime": "^7.26.0",
-    "backend-test-tools": "^1.0.6",
+    "backend-test-tools": "^1.0.7",
     "bcryptjs": "^2.4.3",
     "express": "^4.21.2",
     "mysql2": "^3.11.5",
-    "node-server-engine": "^1.1.8",
+    "node-server-engine": "^1.2.7",
     "prom-client": "^15.1.3",
     "sequelize": "^6.37.5",
     "sequelize-cli": "^6.6.2",
