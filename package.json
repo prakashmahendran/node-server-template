@@ -4,7 +4,8 @@
   "description": "~~description~~",
   "main": "dist/index.js",
   "scripts": {
-    "start": "nodemon -e js,yaml -r @babel/register -r ./env/config.js ./dist/index.js",
+    "dev": "nodemon",
+    "start": "node -r ./env/config.js ./dist/index.js",
     "build": "rimraf dist && tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json && npx babel src --out-dir dist --source-maps --extensions \".ts\" --ignore \"**/*.test.ts\" --copy-files --no-copy-ignored",
     "test": "cross-env NODE_ENV=test nyc mocha test/hooks.ts \"src/**/*.test.ts\"",
     "coverage": "nyc report --report-dir=./test-coverage --reporter=html --reporter=text",
@@ -40,7 +41,7 @@
     "bcryptjs": "^2.4.3",
     "express": "^4.21.2",
     "mysql2": "^3.11.5",
-    "node-server-engine": "^1.3.2",
+    "node-server-engine": "^1.4.9",
     "prom-client": "^15.1.3",
     "sequelize": "^6.37.5",
     "sequelize-cli": "^6.6.2",
