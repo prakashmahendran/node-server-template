@@ -1,7 +1,8 @@
 import {
   EndpointHandler,
   EndpointAuthType,
-  EndpointRequestType
+  EndpointRequestType,
+  reportError
 } from 'node-server-engine';
 import { Response } from 'express';
 import { Role, Permission, RolePermission, Audit } from 'db';
@@ -60,6 +61,7 @@ export const getRoleDetailsHandler: EndpointHandler<
 
     res.status(200).json(formattedRole);
   } catch (error) {
+    reportError(error);
     res.status(500).json({ message: 'Error fetching role details', error });
   }
 };
@@ -98,6 +100,7 @@ export const getRolesHandler: EndpointHandler<EndpointAuthType.JWT> = async (
 
     res.status(200).json(formattedRoles);
   } catch (error) {
+    reportError(error);
     res.status(500).json({ message: ROLE_GET_ERROR, error });
   }
 };
@@ -175,7 +178,7 @@ export const createRoleHandler: EndpointHandler<EndpointAuthType> = async (
       .status(201)
       .json({ message: 'Role created successfully', role: formattedRole });
   } catch (error) {
-    console.error(error);
+    reportError(error);
     res.status(500).json({ message: ROLE_CREATION_ERROR, error });
   }
 };
@@ -291,7 +294,7 @@ export const updateRoleHandler: EndpointHandler<EndpointAuthType.JWT> = async (
       .status(200)
       .json({ message: 'Role updated successfully', role: formattedRole });
   } catch (error) {
-    console.error(error);
+    reportError(error);
     res.status(500).json({ message: ROLE_UPDATE_ERROR, error });
   }
 };
@@ -323,6 +326,7 @@ export const deleteRoleHandler: EndpointHandler<EndpointAuthType.JWT> = async (
     await role.destroy();
     res.status(200).json({ message: 'Role deleted successfully' });
   } catch (error) {
+    reportError(error);
     res.status(500).json({ message: ROLE_DELETE_ERROR, error });
   }
 };
@@ -357,6 +361,7 @@ export const createPermissionHandler: EndpointHandler<
       permission: formattedPermission
     });
   } catch (error) {
+    reportError(error);
     res.status(500).json({ message: PERMISSION_CREATION_ERROR, error });
   }
 };
@@ -374,6 +379,7 @@ export const getPermissionsHandler: EndpointHandler<
     });
     res.status(200).json({ permissions });
   } catch (error) {
+    reportError(error);
     res.status(500).json({ message: 'Error fetching permissions', error });
   }
 };
@@ -438,6 +444,7 @@ export const updatePermissionHandler: EndpointHandler<
       permission: formattedPermission
     });
   } catch (error) {
+    reportError(error);
     res.status(500).json({ message: PERMISSION_UPDATE_ERROR, error });
   }
 };
@@ -474,6 +481,7 @@ export const deletePermissionHandler: EndpointHandler<
     await permission.destroy();
     res.status(200).json({ message: 'Permission deleted successfully' });
   } catch (error) {
+    reportError(error);
     res.status(500).json({ message: PERMISSION_DELETE_ERROR, error });
   }
 };

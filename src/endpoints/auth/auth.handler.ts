@@ -2,7 +2,8 @@ import {
   EndpointAuthType,
   EndpointRequestType,
   EndpointHandler,
-  generateJwtToken
+  generateJwtToken,
+  reportError
 } from 'node-server-engine';
 import bcrypt from 'bcryptjs';
 import { Response } from 'express';
@@ -85,6 +86,7 @@ export const loginHandler: EndpointHandler<EndpointAuthType> = async (
 
     res.status(200).json({ accessToken, tokenExpiry, user:transformedUser });
   } catch (error) {
+    reportError(error);
     res.status(500).json({ message: AUTH_LOGIN_ERROR, error });
   }
 };

@@ -7,5 +7,12 @@
     "NODE_ENV": "development",
     "TS_NODE_PROJECT": "tsconfig.dev.json"
   },
-  "delay": 1000
+  "delay": 1000,
+  "quiet": false,
+  "verbose": false,
+  "colours": true,
+  "events": {
+    "restart": "echo '\\n[nodemon] Restarting due to file changes...\\n'",
+    "start": ""
+  }
 }

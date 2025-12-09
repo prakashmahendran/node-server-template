@@ -2,6 +2,7 @@ import {
     EndpointAuthType,
     EndpointRequestType,
     EndpointHandler,
+    reportError
 } from 'node-server-engine';
 import bcrypt from 'bcryptjs';
 import { Response } from 'express';
@@ -55,6 +56,7 @@ export const createUserHandler: EndpointHandler<EndpointAuthType.JWT> = async (
 
     res.status(200).json({ message: 'User created successfully', newUser });
   } catch (error) {
+    reportError(error);
     res.status(500).json({ message: USER_CREATION_ERROR, error });
   }
 };
@@ -76,6 +78,7 @@ export const getAllUsersHandler: EndpointHandler<EndpointAuthType.JWT> = async (
 
     res.status(200).json({ Users: users });
   } catch (error) {
+    reportError(error);
     res.status(500).json({ message: USER_GET_ERROR, error });
   }
 };
@@ -99,7 +102,8 @@ export const getUserByIdHandler: EndpointHandler<EndpointAuthType.JWT> = async (
     }
 
     res.status(200).json({ user })
-  } catch {
+  } catch (error) {
+    reportError(error);
     res.status(500).json({ message: USER_GET_ERROR });
   }
 };
@@ -174,6 +178,7 @@ export const updateUserHandler: EndpointHandler<EndpointAuthType.JWT> = async (
 
     res.status(200).json({ message: 'User updated successfully', user: updateUser })
   } catch (error) {
+    reportError(error);
     res.status(500).json({ message: USER_UPDATE_ERROR, error });
   }
 };
@@ -208,6 +213,7 @@ export const deleteUserHandler: EndpointHandler<EndpointAuthType.JWT> = async (
 
     res.status(200).json({ message: 'User deleted successfully' });
   } catch (error) {
+    reportError(error);
     res.status(500).json({ message: USER_DELETION_ERROR, error });
   }
 };

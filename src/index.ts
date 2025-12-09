@@ -1,5 +1,6 @@
 import {
   reportError,
+  reportInfo,
   sequelize,
   runPendingMigrations
 } from 'node-server-engine';
@@ -13,7 +14,7 @@ createServer()
     const modelArray = Object.values(models);
     await sequelize.addModels(modelArray);
     if(process.env.RUN_DB_MIGRATION?.toLowerCase()==='true'){
-      console.log('Db Migration Started');
+      reportInfo('Database migration started');
       await runPendingMigrations();
     }
   })
