@@ -3,8 +3,7 @@ import {
   Column,
   Model,
   DataType,
-  ForeignKey,
-  Default
+  ForeignKey
 } from 'sequelize-typescript';
 import { User } from './User';
 
@@ -52,19 +51,4 @@ export class Audit extends Model {
   @ForeignKey(() => User)
   @Column({ type: DataType.INTEGER, allowNull: true })
   performedBy?: number; // ID of the user who performed the action
-
-  // Audit fields
-  @Column({
-    type: DataType.DATE,
-    defaultValue: DataType.NOW,
-    allowNull: false
-  })
-  createdAt!: Date; // Timestamp of when the audit entry was created
-
-  @Column({
-    type: DataType.DATE,
-    defaultValue: DataType.NOW,
-    allowNull: false
-  })
-  updatedAt!: Date; // Timestamp of when the audit entry was last updated
 }

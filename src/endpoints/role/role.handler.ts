@@ -66,7 +66,7 @@ export const getRoleDetailsHandler: EndpointHandler<
 
 // Handler to get all roles
 export const getRolesHandler: EndpointHandler<EndpointAuthType.JWT> = async (
-  req: EndpointRequestType[EndpointAuthType.JWT],
+  _req: EndpointRequestType[EndpointAuthType.JWT],
   res: Response
 ): Promise<void> => {
   try {
@@ -365,7 +365,7 @@ export const createPermissionHandler: EndpointHandler<
 export const getPermissionsHandler: EndpointHandler<
   EndpointAuthType.JWT
 > = async (
-  req: EndpointRequestType[EndpointAuthType.JWT],
+  _req: EndpointRequestType[EndpointAuthType.JWT],
   res: Response
 ): Promise<void> => {
   try {

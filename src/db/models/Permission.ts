@@ -26,12 +26,6 @@ export class Permission extends Model {
   @Column({ type: DataType.INTEGER, allowNull: true })
   updatedBy?: number; // User who last updated the permission
 
-  @Column({ type: DataType.DATE, defaultValue: DataType.NOW })
-  createdAt!: Date; // Timestamp when the permission was created
-
-  @Column({ type: DataType.DATE, defaultValue: DataType.NOW })
-  updatedAt!: Date; // Timestamp when the permission was last updated
-
   @BelongsToMany(() => Role, () => RolePermission)
   roles!: Role[];
 }

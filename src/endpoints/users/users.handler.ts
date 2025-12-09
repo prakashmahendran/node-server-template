@@ -62,7 +62,7 @@ export const createUserHandler: EndpointHandler<EndpointAuthType.JWT> = async (
 
 //get all user
 export const getAllUsersHandler: EndpointHandler<EndpointAuthType.JWT> = async (
-  req: EndpointRequestType[EndpointAuthType.JWT],
+  _req: EndpointRequestType[EndpointAuthType.JWT],
   res: Response
 ) => {
   try {

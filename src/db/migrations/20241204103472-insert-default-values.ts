@@ -127,6 +127,6 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
   ]);
 }
 
-export async function down(queryInterface: QueryInterface): Promise<void> {
+export async function down(_queryInterface: QueryInterface): Promise<void> {
   // Code to reverse the changes (if needed) in case of rollback
 }

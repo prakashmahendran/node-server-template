@@ -25,10 +25,4 @@ export class Role extends Model {
 
   @Column({ type: DataType.INTEGER, allowNull: true })
   updatedBy?: number;
-
-  @Column({ type: DataType.DATE, defaultValue: DataType.NOW })
-  createdAt!: Date;
-
-  @Column({ type: DataType.DATE, defaultValue: DataType.NOW })
-  updatedAt!: Date;
 }
