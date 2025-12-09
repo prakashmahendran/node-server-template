@@ -7,10 +7,20 @@ servers:
   - url: http://localhost:5050/
     description: Local Server
 security:
-  - BearerAuth: []
-
+  - bearerAuth: []
+  - staticAuth: []
+  
 components:
   securitySchemes:
-    BearerAuth:
+    bearerAuth:
       type: http
       scheme: bearer
+      bearerFormat: JWT
+    staticAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: >
+        Static authentication key required to access this endpoint.
+        Include the key in the `Authorization` header prefixed with `Bearer`, like:  
+        `Authorization: Bearer <your-static-key>`.
