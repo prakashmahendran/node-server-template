@@ -33,7 +33,7 @@ export class Audit extends Model {
       return value;
     }
   })
-  previousData?: object; // JSON object with previous data before change
+  declare previousData?: object; // JSON object with previous data before change
 
   @Column({
     type: dialect === 'mssql' ? DataType.STRING : DataType.JSON,
@@ -46,7 +46,7 @@ export class Audit extends Model {
       return value;
     }
   })
-  newData?: object; // JSON object with new data after change
+  declare newData?: object; // JSON object with new data after change
 
   @ForeignKey(() => User)
   @Column({ type: DataType.INTEGER, allowNull: true })

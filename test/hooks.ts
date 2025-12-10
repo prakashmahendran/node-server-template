@@ -1,8 +1,4 @@
 import { Server, sequelize, runPendingMigrations } from 'node-server-engine';
-import {
-  generatePkiEnvironment,
-  generateEcdsaKeyPair
-} from 'backend-test-tools';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import { Application } from 'express';
@@ -23,10 +19,16 @@ const savedEnv = { ...process.env };
 export let server: Server;
 export let app: Application;
 
+// Add error logging to catch unhandled errors
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('❌ Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
+process.on('uncaughtException', (error) => {
+  console.error('❌ Uncaught Exception:', error);
+});
+
 before(async () => {
-  // Generate certificates and keys
-  generatePkiEnvironment();
-  generateEcdsaKeyPair();
   server = createServer();
 
   app = server.getApp();
