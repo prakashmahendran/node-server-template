@@ -42,7 +42,7 @@
     "backend-test-tools": "^1.1.3",
     "bcryptjs": "^2.4.3",
     "express": "^4.21.2",
-    "node-server-engine": "^1.7.0",
+    "node-server-engine": "^1.8.0",
     "sequelize": "^6.37.5",
     "sequelize-typescript": "^2.1.6"
   },
