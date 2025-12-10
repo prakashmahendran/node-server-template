@@ -53,7 +53,7 @@ export const getRoleDetailsHandler: EndpointHandler<
       name: role.name,
       description: role.description,
       permissions:
-        role.permissions?.map((permission: any) => ({
+        role.permissions?.map((permission: { action: string; groupName: string }) => ({
           action: permission.action,
           groupName: permission.groupName
         })) || []
@@ -91,7 +91,7 @@ export const getRolesHandler: EndpointHandler<EndpointAuthType.JWT> = async (
         name: roleData.name,
         description: roleData.description,
         permissions:
-          roleData.permissions?.map((permission: any) => ({
+          roleData.permissions?.map((permission: { action: string; groupName: string }) => ({
             action: permission.action,
             groupName: permission.groupName
           })) || []
@@ -168,7 +168,7 @@ export const createRoleHandler: EndpointHandler<EndpointAuthType> = async (
       name: role.name,
       description: role.description,
       permissions:
-        role.permissions?.map((permission: any) => ({
+        role.permissions?.map((permission: { action: string; groupName: string }) => ({
           action: permission.action,
           groupName: permission.groupName
         })) || []
@@ -284,7 +284,7 @@ export const updateRoleHandler: EndpointHandler<EndpointAuthType.JWT> = async (
       name: role.name,
       description: role.description,
       permissions:
-        role.permissions?.map((permission: any) => ({
+        role.permissions?.map((permission: { action: string; groupName: string }) => ({
           action: permission.action,
           groupName: permission.groupName
         })) || []

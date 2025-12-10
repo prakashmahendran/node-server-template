@@ -32,8 +32,8 @@ export const createRoleValidator: Schema = {
       errorMessage: 'Permissions must be an array of actions'
     },
     custom: {
-      options: (permissions: any) => {
-        if (permissions && permissions.some((perm: any) => typeof perm !== 'string')) {
+      options: (permissions: string[]) => {
+        if (permissions && permissions.some((perm: string) => typeof perm !== 'string')) {
           throw new Error('Each permission must be a string');
         }
         return true;
@@ -81,8 +81,8 @@ export const updateRoleValidator: Schema = {
       errorMessage: 'Permissions must be an array of actions'
     },
     custom: {
-      options: (permissions: any) => {
-        if (permissions && permissions.some((perm: any) => typeof perm !== 'string')) {
+      options: (permissions: string[]) => {
+        if (permissions && permissions.some((perm: string) => typeof perm !== 'string')) {
           throw new Error('Each permission must be a string');
         }
         return true;
