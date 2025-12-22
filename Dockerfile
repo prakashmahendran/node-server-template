@@ -1,6 +1,6 @@
 FROM node:20.18.0-slim
 
-WORKDIR /usr/src/app/ai
+WORKDIR /usr/src/app/~~name~~
 
 COPY package*.json ./
 
@@ -10,6 +10,6 @@ COPY . .
 
 RUN npm run build
 
-EXPOSE 5050
+EXPOSE 8080
 
 CMD ["npm", "run", "start"]
