@@ -17,19 +17,14 @@ process.on('unhandledRejection', (reason) => {
 process.on('uncaughtException', (error) => {
   reportError('Uncaught Exception');
   reportError(error);
-  // In production, you might want to exit gracefully here
-  // but for Cloud Run health checks, we want to keep the server running
 });
-
 
 // Start the HTTP server first to pass Cloud Run health checks
 createServer()
   .init()
   .then(async () => {
     reportInfo('HTTP server started successfully');
-    
-    // Only initialize database if explicitly enabled
-    // This allows the server to start and pass health checks even without database
+   
     const shouldInitDb = process.env.RUN_DB_MIGRATION?.toLowerCase() === 'true';
     
     if (shouldInitDb) {

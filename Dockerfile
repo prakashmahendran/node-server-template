@@ -1,6 +1,6 @@
 FROM node:20.18.0-slim
 
-WORKDIR /usr/src/app/service-name
+WORKDIR /usr/src/app/~~name~~
 
 COPY package*.json ./
 
