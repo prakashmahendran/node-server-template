@@ -13,19 +13,23 @@ const reader = readline.createInterface({
   output: process.stdout,
 });
 
-const files = ['package.json', 'package-lock.json', 'src/app/createServer.ts'];
+const files = ['package.json', 'package-lock.json', 'Dockerfile', '.env.example', 'src/app/createServer.ts'];
 
 reader.question('Project name (ex: user-service): ', (name) => {
   reader.question('Description: ', (description) => {
     reader.question('Debug namespace: ', (namespace) => {
       // Replace name and description in each of the config files
       for (const file of files) {
-        const fileData = fs.readFileSync(file, 'utf-8');
-        const replacedFileData = fileData
-          .replace(/~~name~~/g, name)
-          .replace(/~~description~~/g, description)
-          .replace(/~~namespace~~/g, namespace);
-        fs.writeFileSync(file, replacedFileData, 'utf-8');
+        try {
+          const fileData = fs.readFileSync(file, 'utf-8');
+          const replacedFileData = fileData
+            .replace(/~~name~~/g, name)
+            .replace(/~~description~~/g, description)
+            .replace(/~~namespace~~/g, namespace);
+          fs.writeFileSync(file, replacedFileData, 'utf-8');
+        } catch (err) {
+          console.warn(`Skipping ${file}: ${err.message}`);
+        }
       }
       // Write README
       fs.writeFileSync('README.md', `# ${name}\n\n${description}`, 'utf-8');
