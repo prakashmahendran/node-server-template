@@ -213,6 +213,8 @@ The `/src` directory is by convention defined in such a way.
     # Other sequelize related files
   /endpoints
     # Endpoints definition
+  /pubsub
+    # Pub/Sub initialization, handlers, and configuration
   /utils
     # Utility functions
 ```
@@ -226,6 +228,8 @@ On larger projects, the architecture can be divided in smaller sub-modules that 
     /actions
     /endpoints
     /utils
+  /pubsub
+    # Pub/Sub initialization, handlers, and configuration
   /user
     /actions
     /endpoints
@@ -247,3 +251,17 @@ Endpoints are built in modules with the following format.
       addContact.docs.yaml.ts # Documentation
       addContact.validator.ts # Input validation
 ```
+
+##### Pub/Sub
+
+Pub/Sub related code is organized in a dedicated module with the following structure:
+
+```bash
+/src
+  /pubsub
+    index.ts # Main export file
+    initPubSub.ts # Pub/Sub initialization (publishers and subscribers)
+    handlers.ts # Message handlers for processing incoming messages
+```
+
+This structure keeps all Pub/Sub initialization and message handling logic separate from endpoints, which remain in `/src/endpoints/pubsub` for API testing purposes.

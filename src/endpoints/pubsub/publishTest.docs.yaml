@@ -1,0 +1,106 @@
+/pubsub/publish:
+  post:
+    summary: Publish a test message to Pub/Sub
+    description: |
+      Test endpoint to publish a message to Google Cloud Pub/Sub.
+      This endpoint is useful for testing and debugging Pub/Sub integration.
+      Requires ENABLE_PUBSUB to be set to true and PUBSUB_TOPIC to be configured.
+    operationId: publishTestMessage
+    tags:
+      - Pub/Sub
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: The message content to publish.
+                example: "Hello World"
+              data:
+                type: object
+                description: Optional additional data to include with the message.
+                example:
+                  userId: "12345"
+                  action: "test"
+            required:
+              - message
+    responses:
+      '200':
+        description: Message successfully published to Pub/Sub
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                success:
+                  type: boolean
+                  example: true
+                message:
+                  type: string
+                  example: "Message published to Pub/Sub"
+                payload:
+                  type: object
+                  description: The complete payload that was published
+                  properties:
+                    message:
+                      type: string
+                      example: "Hello World"
+                    data:
+                      type: object
+                      example:
+                        userId: "12345"
+                        action: "test"
+                    timestamp:
+                      type: string
+                      format: date-time
+                      example: "2026-01-06T10:30:00.000Z"
+                    service:
+                      type: string
+                      example: "my-service"
+      '400':
+        description: Bad request - Pub/Sub not enabled or not configured
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                success:
+                  type: boolean
+                  example: false
+                message:
+                  type: string
+                  example: "Pub/Sub is not enabled"
+            examples:
+              disabled:
+                summary: Pub/Sub disabled
+                value:
+                  success: false
+                  message: "Pub/Sub is not enabled"
+              notConfigured:
+                summary: Topic not configured
+                value:
+                  success: false
+                  message: "PUBSUB_TOPIC not configured"
+              validationError:
+                summary: Validation error
+                value:
+                  message: "Message is required"
+      '500':
+        description: Internal server error - Failed to publish message
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                success:
+                  type: boolean
+                  example: false
+                message:
+                  type: string
+                  example: "Failed to publish message"
+                error:
+                  type: string
+                  example: "Connection timeout"

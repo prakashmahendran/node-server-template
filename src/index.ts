@@ -5,6 +5,7 @@ import {
   runPendingMigrations
 } from 'node-server-engine';
 import { createServer } from 'app';
+import { initPubSub } from 'pubsub';
 import * as models from 'db/models';
 
 // Handle unhandled promise rejections to prevent crashes from database issues
@@ -44,6 +45,14 @@ createServer()
       }
     } else {
       reportInfo('Database initialization skipped (RUN_DB_MIGRATION not set to true)');
+    }
+
+    // Initialize Pub/Sub after server is running
+    try {
+      await initPubSub();
+    } catch (pubsubError) {
+      reportError('Failed to initialize Pub/Sub (service will continue)');
+      reportError(pubsubError);
     }
   })
   .catch((error) => {  
