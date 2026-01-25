@@ -33,8 +33,8 @@ export async function handleSampleMessage(
  */
 export async function handleAnotherMessageType(
   message: any,
-  attributes: Record<string, string>,
-  publishedAt: Date
+  _attributes: Record<string, string>,
+  _publishedAt: Date
 ): Promise<void> {
   // Handle different message types
   reportInfo(`Processing another message type: ${message.type}`);
