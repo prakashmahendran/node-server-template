@@ -265,4 +265,3 @@ Pub/Sub related code is organized in a dedicated module with the following struc
 ```
 
 This structure keeps all Pub/Sub initialization and message handling logic separate from endpoints, which remain in `/src/endpoints/pubsub` for API testing purposes.
-# Annadhanm-Service
