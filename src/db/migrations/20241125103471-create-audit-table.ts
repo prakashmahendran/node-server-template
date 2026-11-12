@@ -5,7 +5,6 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
   // Determine dialect (database type)
   const dialect = (process.env.SQL_TYPE ?? 'postgres').toLowerCase();
 
-  console.log(dialect);
 
   await queryInterface.createTable('Audits', {
     id: {
@@ -71,6 +70,8 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
       ALTER TABLE Audits
       ADD CONSTRAINT DF_Audits_updatedAt DEFAULT GETDATE() FOR updatedAt;
     `);
+  } else if (dialect === 'sqlite') {
+    // SQLite (local development): timestamps are set by the application
   } else {
     throw new Error('Unsupported SQL dialect');
   }

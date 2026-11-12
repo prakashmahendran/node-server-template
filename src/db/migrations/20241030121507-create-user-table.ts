@@ -88,6 +88,8 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
       ALTER TABLE Users
       ADD CONSTRAINT DF_Users_updatedAt DEFAULT GETDATE() FOR updatedAt;
     `);
+  } else if (dialect === 'sqlite') {
+    // SQLite (local development): timestamps are set by the application
   } else {
     throw new Error('Unsupported SQL dialect');
   }

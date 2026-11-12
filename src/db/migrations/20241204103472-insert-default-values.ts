@@ -15,74 +15,86 @@ interface Permission {
   groupName: string;
 }
 
+/** Timestamps are set explicitly so the seed works on every dialect (including SQLite) */
+function withTimestamps<T extends object>(
+  rows: Array<T>
+): Array<T & { createdAt: Date; updatedAt: Date }> {
+  const now = new Date();
+  return rows.map((row) => ({ ...row, createdAt: now, updatedAt: now }));
+}
+
 export async function up(queryInterface: QueryInterface): Promise<void> {
   // Insert roles into the Roles table
-  await queryInterface.bulkInsert('Roles', [
-    { name: 'admin', description: 'Administrator role' },
-  ]);
+  await queryInterface.bulkInsert(
+    'Roles',
+    withTimestamps([{ name: 'admin', description: 'Administrator role' }])
+  );
 
-  await queryInterface.bulkInsert('Permissions', [
-    {
-      action: 'CreateRole',
-      description: 'Create a new role',
-      groupName: 'Role & Permission'
-    },
-    {
-      action: 'CreatePermission',
-      description: 'Create a new permission',
-      groupName: 'Role & Permission'
-    },
-    {
-      action: 'UpdateRole',
-      description: 'Update an existing role',
-      groupName: 'Role & Permission'
-    },
-    {
-      action: 'UpdatePermission',
-      description: 'Update an existing permission',
-      groupName: 'Role & Permission'
-    },
-    {
-      action: 'DeleteRole',
-      description: 'Delete a role',
-      groupName: 'Role & Permission'
-    },
-    {
-      action: 'DeletePermission',
-      description: 'Delete a permission',
-      groupName: 'Role & Permission'
-    },
-    {
-      action: 'GetRole',
-      description: 'Get details of a role',
-      groupName: 'Role & Permission'
-    },
-    {
-      action: 'GetPermission',
-      description: 'Get details of a permission',
-      groupName: 'Role & Permission'
-    },
-    {
-      action: 'CreateUser',
-      description: 'Create a new user',
-      groupName: 'User Management'
-    },
-    {
-      action: 'GetUser',
-      description: 'Get details of a user',
-      groupName: 'User Management'
-    },
-    {
-      action: 'UpdateUser',
-      description: 'update an existing user',
-      groupName: 'User Management'
-    },
-    {
-      action: 'DeleteUser',
-      description: 'update an existing user',
-      groupName: 'User Management'
-    }
-  ]);
+  await queryInterface.bulkInsert(
+    'Permissions',
+    withTimestamps([
+      {
+        action: 'CreateRole',
+        description: 'Create a new role',
+        groupName: 'Role & Permission'
+      },
+      {
+        action: 'CreatePermission',
+        description: 'Create a new permission',
+        groupName: 'Role & Permission'
+      },
+      {
+        action: 'UpdateRole',
+        description: 'Update an existing role',
+        groupName: 'Role & Permission'
+      },
+      {
+        action: 'UpdatePermission',
+        description: 'Update an existing permission',
+        groupName: 'Role & Permission'
+      },
+      {
+        action: 'DeleteRole',
+        description: 'Delete a role',
+        groupName: 'Role & Permission'
+      },
+      {
+        action: 'DeletePermission',
+        description: 'Delete a permission',
+        groupName: 'Role & Permission'
+      },
+      {
+        action: 'GetRole',
+        description: 'Get details of a role',
+        groupName: 'Role & Permission'
+      },
+      {
+        action: 'GetPermission',
+        description: 'Get details of a permission',
+        groupName: 'Role & Permission'
+      },
+      {
+        action: 'CreateUser',
+        description: 'Create a new user',
+        groupName: 'User Management'
+      },
+      {
+        action: 'GetUser',
+        description: 'Get details of a user',
+        groupName: 'User Management'
+      },
+      {
+        action: 'UpdateUser',
+        description: 'update an existing user',
+        groupName: 'User Management'
+      },
+      {
+        action: 'DeleteUser',
+        description: 'update an existing user',
+        groupName: 'User Management'
+      }
+    ])
+  );
 
   const roles = await queryInterface.sequelize.query('SELECT * FROM Roles', {
     type: QueryTypes.SELECT
@@ -114,7 +126,10 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
   }
 
   // Insert role-permission mappings into RolePermissions table
-  await queryInterface.bulkInsert('RolePermissions', rolePermissions);
+  await queryInterface.bulkInsert(
+    'RolePermissions',
+    withTimestamps(rolePermissions)
+  );
 
   // The initial administrator is created from the environment, never from a hardcoded password
   const adminEmail = process.env.ADMIN_EMAIL;
@@ -130,16 +145,19 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
     throw new Error('ADMIN_PASSWORD must be at least 12 characters long');
   }
 
-  await queryInterface.bulkInsert('Users', [
-    {
-      firstName: 'Admin',
-      lastName: 'Admin',
-      email: adminEmail.trim().toLowerCase(),
-      password: await bcrypt.hash(adminPassword, 10),
-      roleId: adminRole.id,
-      accountStatus: 'active'
-    }
-  ]);
+  await queryInterface.bulkInsert(
+    'Users',
+    withTimestamps([
+      {
+        firstName: 'Admin',
+        lastName: 'Admin',
+        email: adminEmail.trim().toLowerCase(),
+        password: await bcrypt.hash(adminPassword, 10),
+        roleId: adminRole.id,
+        accountStatus: 'active'
+      }
+    ])
+  );
 }
 
 export async function down(_queryInterface: QueryInterface): Promise<void> {
