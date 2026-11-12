@@ -12,54 +12,54 @@ import { Role } from './Role';
 @Table
 export class User extends Model {
   @Column({ type: DataType.STRING, allowNull: false })
-  firstName!: string;
+  declare firstName: string;
 
   @Column({ type: DataType.STRING, allowNull: false })
-  lastName!: string;
+  declare lastName: string;
 
   @Column({ type: DataType.STRING, allowNull: false, unique: true })
-  email!: string;
+  declare email: string;
 
   @Column({ type: DataType.DATE, allowNull: true })
-  dateOfBirth?: Date;
+  declare dateOfBirth?: Date;
 
   @Column({ type: DataType.STRING, allowNull: true })
-  phoneNumber?: string;
+  declare phoneNumber?: string;
 
   @Column({ type: DataType.STRING, allowNull: false })
-  password!: string;
+  declare password: string;
 
   @Column({ type: DataType.STRING, allowNull: true })
-  address?: string;
+  declare address?: string;
 
   @Column({ type: DataType.STRING, allowNull: true })
-  qualification?: string;
+  declare qualification?: string;
 
   @Column({ type: DataType.STRING, allowNull: true })
-  profilePic?: string;
+  declare profilePic?: string;
 
   @Column({
     type: DataType.ENUM('active', 'suspended', 'inactive'),
     allowNull: false,
     defaultValue: 'active'
   })
-  accountStatus!: 'active' | 'suspended' | 'inactive';
+  declare accountStatus: 'active' | 'suspended' | 'inactive';
 
   @Column({ type: DataType.DATE, allowNull: true })
-  lastLogin?: Date;
+  declare lastLogin?: Date;
 
   @ForeignKey(() => Role)
   @Column({ type: DataType.INTEGER, allowNull: false })
-  roleId!: number; // Foreign key for Role
+  declare roleId: number; // Foreign key for Role
 
   @Column({ type: DataType.INTEGER, allowNull: true })
-  createdBy?: number;
+  declare createdBy?: number;
 
   @Column({ type: DataType.INTEGER, allowNull: true })
-  updatedBy?: number;
+  declare updatedBy?: number;
 
   @BelongsTo(() => Role)
-  role!: Role;
+  declare role: Role;
 
   /** Never expose the password hash when a user is serialized (API responses, audit logs...) */
   // Same signature as Model.toJSON so callers keep their typing

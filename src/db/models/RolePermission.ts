@@ -13,15 +13,15 @@ import { Permission } from './Permission';
 export class RolePermission extends Model {
   @ForeignKey(() => Role)
   @Column({ type: DataType.INTEGER, allowNull: false, primaryKey: true })
-  roleId!: number; // Foreign key referencing Role
+  declare roleId: number; // Foreign key referencing Role
 
   @ForeignKey(() => Permission)
   @Column({ type: DataType.STRING, allowNull: false, primaryKey: true })
-  permissionId!: string; // Foreign key referencing Permission
+  declare permissionId: string; // Foreign key referencing Permission
 
   @BelongsTo(() => Role)
-  role!: Role;
+  declare role: Role;
 
   @BelongsTo(() => Permission)
-  permission!: Permission;
+  declare permission: Permission;
 }

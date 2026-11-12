@@ -13,13 +13,13 @@ const dialect = (process.env.SQL_TYPE ?? 'postgres').toLowerCase();
 @Table
 export class Audit extends Model {
   @Column({ type: DataType.STRING, allowNull: false })
-  entityType!: string; // Name of the entity (e.g., "User", "Department")
+  declare entityType: string; // Name of the entity (e.g., "User", "Department")
 
   @Column({ type: DataType.INTEGER, allowNull: false })
-  entityId!: number; // ID of the record in the entity table
+  declare entityId: number; // ID of the record in the entity table
 
   @Column({ type: DataType.STRING, allowNull: false })
-  action!: string; // Action performed (e.g., "CREATE", "UPDATE", "DELETE")
+  declare action: string; // Action performed (e.g., "CREATE", "UPDATE", "DELETE")
 
   // JSON fields - support different types based on dialect
   @Column({
@@ -50,5 +50,5 @@ export class Audit extends Model {
 
   @ForeignKey(() => User)
   @Column({ type: DataType.INTEGER, allowNull: true })
-  performedBy?: number; // ID of the user who performed the action
+  declare performedBy?: number; // ID of the user who performed the action
 }

@@ -1,5 +1,13 @@
 {
   "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "declaration": false,
+    "emitDeclarationOnly": false,
+    "sourceMap": true,
+    "useDefineForClassFields": false
+  },
   "include": ["src"],
   "exclude": ["**/*.test.ts"]
 }
