@@ -12,3 +12,11 @@ README.md
 .dockerignore
 Dockerfile
 npm-debug.log
+# Never bake secrets or local artifacts into the image
+.env.*
+keys/
+certs/
+dist/
+coverage/
+.nyc_output/
+.test-coverage/

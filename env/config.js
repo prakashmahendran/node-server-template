@@ -1,2 +1,2 @@
 const dotenv = require('dotenv');
-dotenv.config();
+dotenv.config({ quiet: true });

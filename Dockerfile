@@ -1,18 +1,28 @@
-FROM node:20.18.0-slim
+# Build stage: install all dependencies and compile TypeScript
+FROM node:22-slim AS build
 
 WORKDIR /usr/src/app/~~name~~
 
 COPY package*.json ./
-
-RUN npm install
+RUN npm ci
 
 COPY . .
-
 RUN npm run build
 
-# Remove source files to reduce image size
-RUN rm -rf src test node_modules/@types
+# Runtime stage: production dependencies and compiled code only
+FROM node:22-slim
+
+ENV NODE_ENV=production
+WORKDIR /usr/src/app/~~name~~
+
+COPY package*.json ./
+RUN npm ci --omit=dev --ignore-scripts && npm cache clean --force
+
+COPY --from=build /usr/src/app/~~name~~/dist ./dist
+
+# Do not run the service as root
+USER node
 
 EXPOSE 5050
 
-CMD ["npm", "run", "start"]
+CMD ["node", "-r", "./dist/env/config.js", "./dist/index.js"]
