@@ -15,6 +15,13 @@ export const loginValidator: Schema = {
     in: 'body',
     exists: {
       errorMessage: 'Password is required'
+    },
+    isString: {
+      errorMessage: 'Password must be a string'
+    },
+    isLength: {
+      options: { max: 72 },
+      errorMessage: 'Password cannot exceed 72 characters'
     }
   }
 };

@@ -2,7 +2,8 @@ import {
   EndpointAuthType,
   EndpointRequestType,
   EndpointHandler,
-  PubSub
+  PubSub,
+  reportError
 } from 'node-server-engine';
 import { Response } from 'express';
 import {
@@ -54,10 +55,10 @@ export const publishTestHandler: EndpointHandler<EndpointAuthType.JWT> = async (
       payload
     });
   } catch (error) {
+    reportError(error);
     res.status(500).json({
       success: false,
-      message: PUBSUB_PUBLISH_ERROR,
-      error: error instanceof Error ? error.message : 'Unknown error'
+      message: PUBSUB_PUBLISH_ERROR
     });
   }
 };

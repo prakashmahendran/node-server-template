@@ -1,6 +1,7 @@
 import { Endpoint, EndpointMethod, EndpointAuthType, middleware } from 'node-server-engine';
 import {
   createRoleValidator,
+  getRoleValidator,
   updateRoleValidator,
   deleteRoleValidator,
   createPermissionValidator,
@@ -24,7 +25,7 @@ export const getRoleDetailsEndpoint = new Endpoint({
   method: EndpointMethod.GET,
   handler: getRoleDetailsHandler,
   authType: EndpointAuthType.JWT,
-  validator: {},
+  validator: getRoleValidator,
   middleware: [middleware.checkPermission('GetRole')]
 });
 

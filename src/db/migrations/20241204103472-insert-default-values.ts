@@ -1,3 +1,4 @@
+import bcrypt from 'bcryptjs';
 import { QueryInterface, QueryTypes } from 'sequelize';
 
 // Define types for roles and permissions based on their schema
@@ -115,13 +116,27 @@ export async function up(queryInterface: QueryInterface): Promise<void> {
   // Insert role-permission mappings into RolePermissions table
   await queryInterface.bulkInsert('RolePermissions', rolePermissions);
 
+  // The initial administrator is created from the environment, never from a hardcoded password
+  const adminEmail = process.env.ADMIN_EMAIL;
+  const adminPassword = process.env.ADMIN_PASSWORD;
+  const adminRole = typedRoles.find((role) => role.name === 'admin');
+  if (!adminEmail || !adminPassword || !adminRole) {
+    console.warn(
+      'Skipping the initial admin user: set ADMIN_EMAIL and ADMIN_PASSWORD before running migrations'
+    );
+    return;
+  }
+  if (adminPassword.length < 12) {
+    throw new Error('ADMIN_PASSWORD must be at least 12 characters long');
+  }
+
   await queryInterface.bulkInsert('Users', [
     {
       firstName: 'Admin',
       lastName: 'Admin',
-      email: 'admin@gmail.com',
-      password: '$2b$10$QapWKNNihqtqiFLeLU/eXOhRCD4vpMbULwzf0fV15hze8FnfT8DQ6', // example hashed password
-      roleId: 1, // Assuming the admin role has id = 1
+      email: adminEmail.trim().toLowerCase(),
+      password: await bcrypt.hash(adminPassword, 10),
+      roleId: adminRole.id,
       accountStatus: 'active'
     }
   ]);

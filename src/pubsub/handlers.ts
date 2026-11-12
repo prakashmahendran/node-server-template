@@ -2,18 +2,25 @@ import { reportDebug, reportInfo } from 'node-server-engine';
 
 const namespace = '~~name~~:pubsub';
 
+/** Shape of the messages handled by this service; adapt it to your events */
+export interface SampleMessage {
+  type?: string;
+  [key: string]: unknown;
+}
+
 /**
  * Sample handler for processing incoming Pub/Sub messages
- * 
+ *
  * @param message - The message payload
  * @param attributes - Message attributes/metadata
  * @param publishedAt - When the message was published
  */
 export async function handleSampleMessage(
-  message: any,
+  message: SampleMessage,
   attributes: Record<string, string>,
   publishedAt: Date
 ): Promise<void> {
+  // Payloads can contain personal data: only log them in debug mode
   reportDebug({
     namespace,
     message: 'Received Pub/Sub message',
@@ -22,8 +29,8 @@ export async function handleSampleMessage(
 
   // Add your message processing logic here
   // Example: Process event, update database, trigger workflows, etc.
-  
-  reportInfo(`Pub/Sub message processed successfully: ${JSON.stringify(message)}`);
+
+  reportInfo(`Pub/Sub message processed successfully (type: ${message.type ?? 'unknown'})`);
 }
 
 /**
@@ -32,10 +39,9 @@ export async function handleSampleMessage(
  * with different subscriptions in initPubSub.ts
  */
 export async function handleAnotherMessageType(
-  message: any,
+  message: SampleMessage,
   _attributes: Record<string, string>,
   _publishedAt: Date
 ): Promise<void> {
-  // Handle different message types
-  reportInfo(`Processing another message type: ${message.type}`);
+  reportInfo(`Processing another message type: ${message.type ?? 'unknown'}`);
 }

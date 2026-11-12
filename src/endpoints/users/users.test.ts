@@ -16,7 +16,8 @@ import {
   USER_CREATION_ERROR,
   USER_UPDATE_ERROR,
   USER_DELETION_ERROR,
-  USER_GET_ERROR
+  USER_GET_ERROR,
+  USER_SELF_DELETION
 } from './users.const';
 import { createUserValidator, updateUserValidator, deleteUserValidator } from './users.validator';
 
@@ -27,7 +28,7 @@ describe('Users Endpoints', () => {
       expect(USER_CREATION_ERROR).to.equal('Error creating user');
       expect(USER_UPDATE_ERROR).to.equal('Error updating user');
       expect(USER_DELETION_ERROR).to.equal('Error deleting user');
-      expect(USER_GET_ERROR).to.equal('Error getting error');
+      expect(USER_GET_ERROR).to.equal('Error getting user');
     });
   });
 
@@ -98,7 +99,7 @@ describe('Users Endpoints', () => {
       expect(bcryptHashStub).to.have.been.calledWith('password123', 10);
       expect(createStub).to.have.been.calledOnce;
       expect(auditCreateStub).to.have.been.calledOnce;
-      expect(res.status).to.have.been.calledWith(200);
+      expect(res.status).to.have.been.calledWith(201);
       expect(res.json).to.have.been.calledWith(
         sinon.match({
           message: 'User created successfully'
@@ -143,13 +144,14 @@ describe('Users Endpoints', () => {
       expect(res.json).to.have.been.calledWith({ Users: mockUsers });
     });
 
-    it('should return 404 when no users found', async () => {
-      sinon.stub(User, 'findAll').resolves(null as any);
+    it('should return an empty list when there are no users', async () => {
+      const findAllStub = sinon.stub(User, 'findAll').resolves([]);
 
       await getAllUsersHandler(req, res);
 
-      expect(res.status).to.have.been.calledWith(404);
-      expect(res.json).to.have.been.calledWith({ message: USER_NOT_FOUND });
+      expect(findAllStub).to.have.been.calledWith({ attributes: { exclude: ['password'] } });
+      expect(res.status).to.have.been.calledWith(200);
+      expect(res.json).to.have.been.calledWith({ Users: [] });
     });
 
     it('should return 500 on error', async () => {
@@ -176,7 +178,10 @@ describe('Users Endpoints', () => {
 
       await getUserByIdHandler(req, res);
 
-      expect(findOneStub).to.have.been.calledWith({ where: { id: 'user-123' } });
+      expect(findOneStub).to.have.been.calledWith({
+        where: { id: 'user-123' },
+        attributes: { exclude: ['password'] }
+      });
       expect(res.status).to.have.been.calledWith(200);
       expect(res.json).to.have.been.calledWith({ user: mockUser });
     });
@@ -288,6 +293,18 @@ describe('Users Endpoints', () => {
 
       expect(res.status).to.have.been.calledWith(404);
       expect(res.json).to.have.been.calledWith({ message: USER_NOT_FOUND });
+    });
+
+    it('should not allow users to delete their own account', async () => {
+      req.params.id = 'self-1';
+      req.user = { id: 'self-1' };
+      const findByPkStub = sinon.stub(User, 'findByPk');
+
+      await deleteUserHandler(req, res);
+
+      expect(findByPkStub).to.not.have.been.called;
+      expect(res.status).to.have.been.calledWith(400);
+      expect(res.json).to.have.been.calledWith({ message: USER_SELF_DELETION });
     });
 
     it('should return 500 on deletion error', async () => {

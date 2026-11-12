@@ -1,5 +1,10 @@
 import { Endpoint, EndpointAuthType, EndpointMethod, middleware } from 'node-server-engine';
-import { createUserValidator, updateUserValidator } from './users.validator';
+import {
+  createUserValidator,
+  updateUserValidator,
+  getUserValidator,
+  deleteUserValidator
+} from './users.validator';
 
 import {
   getAllUsersHandler,
@@ -32,7 +37,7 @@ export const getUserByIdEndpoint = new Endpoint({
   method: EndpointMethod.GET,
   handler: getUserByIdHandler,
   authType: EndpointAuthType.JWT,
-  validator: {},
+  validator: getUserValidator,
   middleware: [middleware.checkPermission('GetUser')]
 });
 
@@ -50,6 +55,6 @@ export const deleteUserEndpoint = new Endpoint({
   method: EndpointMethod.DELETE,
   handler: deleteUserHandler,
   authType: EndpointAuthType.JWT,
-  validator: {},
+  validator: deleteUserValidator,
   middleware: [middleware.checkPermission('DeleteUser')]
 });

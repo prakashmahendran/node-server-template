@@ -1,4 +1,4 @@
-import { Schema } from 'express-validator';
+import { ParamSchema, Schema } from 'express-validator';
 
 export const createRoleValidator: Schema = {
   name: {
@@ -91,6 +91,15 @@ export const updateRoleValidator: Schema = {
   }
 };
 
+export const getRoleValidator: Schema = {
+  roleId: {
+    in: 'params',
+    exists: { errorMessage: 'Role ID is required' },
+    isInt: { options: { min: 1 }, errorMessage: 'Role ID must be a positive integer' },
+    toInt: true
+  }
+};
+
 export const deleteRoleValidator: Schema = {
   id: {
     in: 'params',
@@ -103,69 +112,49 @@ export const deleteRoleValidator: Schema = {
   }
 };
 
-export const createPermissionValidator: Schema = {
-  action: {
-    in: 'body',
-    exists: {
-      errorMessage: 'Action is required'
-    },
-    isString: {
-      errorMessage: 'Action must be a string'
-    },
-    isLength: {
-      options: { max: 255 },
-      errorMessage: 'Action cannot exceed 255 characters'
-    }
-  },
-  description: {
-    in: 'body',
-    isLength: {
-      options: { max: 255 },
-      errorMessage: 'Description cannot exceed 255 characters'
-    }
-  },
-  groupName: {
-    in: 'body',
-    exists: {
-      errorMessage: 'Group Name is required'
-    },
-    isString: {
-      errorMessage: 'Group Name  must be a string'
-    },
-    isLength: {
-      options: { max: 255 },
-      errorMessage: 'Group Name  cannot exceed 255 characters'
-    }
+const permissionAction = (location: 'body' | 'params'): ParamSchema => ({
+  in: location,
+  exists: { errorMessage: 'Permission action is required' },
+  isString: { errorMessage: 'Permission action must be a string' },
+  trim: true,
+  isLength: {
+    options: { min: 1, max: 255 },
+    errorMessage: 'Permission action must be between 1 and 255 characters'
   }
+});
+
+const permissionDescription: ParamSchema = {
+  in: 'body',
+  optional: { options: { values: 'null' } },
+  isString: { errorMessage: 'Description must be a string' },
+  isLength: {
+    options: { max: 255 },
+    errorMessage: 'Description cannot exceed 255 characters'
+  }
+};
+
+const groupName: ParamSchema = {
+  in: 'body',
+  isString: { errorMessage: 'Group name must be a string' },
+  trim: true,
+  isLength: {
+    options: { min: 1, max: 255 },
+    errorMessage: 'Group name must be between 1 and 255 characters'
+  }
+};
+
+export const createPermissionValidator: Schema = {
+  action: permissionAction('body'),
+  description: permissionDescription,
+  groupName: { ...groupName, exists: { errorMessage: 'Group name is required' } }
 };
 
 export const updatePermissionValidator: Schema = {
-  action: {
-    in: 'body',
-    optional: true,
-    isString: {
-      errorMessage: 'Action must be a string'
-    },
-    isLength: {
-      options: { max: 255 },
-      errorMessage: 'Action cannot exceed 255 characters'
-    }
-  }
+  action: permissionAction('params'),
+  groupName: { ...groupName, optional: true },
+  description: permissionDescription
 };
 
 export const deletePermissionValidator: Schema = {
-  action: {
-    in: 'params',
-    exists: {
-      errorMessage: 'Permission action is required'
-    },
-    isString: {
-      errorMessage: 'Permission action must be a string'
-    },
-    isLength: {
-      options: { max: 255 },
-      errorMessage: 'Permission action cannot exceed 255 characters'
-    }
-  }
+  action: permissionAction('params')
 };
-

@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 import { createMockRequest, createMockResponse } from 'test/stubs';
-import { Role, Permission, RolePermission, Audit } from 'db/models';
+import { Role, Permission, RolePermission, Audit, User } from 'db/models';
 import {
   getRoleDetailsHandler,
   getRolesHandler,
@@ -79,9 +79,10 @@ describe('Role Endpoints', () => {
       expect(createPermissionValidator.groupName).to.exist;
     });
 
-    it('should have updatePermissionValidator with optional action', () => {
+    it('should have updatePermissionValidator with action param', () => {
       expect(updatePermissionValidator.action).to.exist;
-      expect(updatePermissionValidator.action.optional).to.be.true;
+      expect(updatePermissionValidator.action.in).to.equal('params');
+      expect(updatePermissionValidator.groupName.optional).to.be.true;
     });
 
     it('should have deletePermissionValidator with action param', () => {
@@ -159,7 +160,7 @@ describe('Role Endpoints', () => {
       expect(res.status).to.have.been.calledWith(500);
       expect(res.json).to.have.been.calledWith(
         sinon.match({
-          message: 'Error fetching role details'
+          message: 'Error fetching roles'
         })
       );
     });
@@ -378,6 +379,8 @@ describe('Role Endpoints', () => {
       };
 
       const findByPkStub = sinon.stub(Role, 'findByPk').resolves(mockRole as any);
+      sinon.stub(User, 'count').resolves(0);
+      sinon.stub(RolePermission, 'destroy').resolves(1);
       const auditCreateStub = sinon.stub(Audit, 'create').resolves({} as any);
 
       await deleteRoleHandler(req, res);
@@ -387,6 +390,20 @@ describe('Role Endpoints', () => {
       expect(mockRole.destroy).to.have.been.calledOnce;
       expect(res.status).to.have.been.calledWith(200);
       expect(res.json).to.have.been.calledWith({ message: 'Role deleted successfully' });
+    });
+
+    it('should return 409 when the role is assigned to users', async () => {
+      req.params.id = 'role-123';
+      const mockRole = { id: 'role-123', name: 'Test Role', destroy: sinon.stub() };
+      sinon.stub(Role, 'findByPk').resolves(mockRole as any);
+      sinon.stub(User, 'count').resolves(2);
+      const auditCreateStub = sinon.stub(Audit, 'create');
+
+      await deleteRoleHandler(req, res);
+
+      expect(res.status).to.have.been.calledWith(409);
+      expect(mockRole.destroy).to.not.have.been.called;
+      expect(auditCreateStub).to.not.have.been.called;
     });
 
     it('should return 404 when role not found', async () => {
@@ -520,7 +537,7 @@ describe('Role Endpoints', () => {
       expect(mockPermission.set).to.have.been.calledOnce;
       expect(mockPermission.save).to.have.been.calledOnce;
       expect(auditCreateStub).to.have.been.calledOnce;
-      expect(res.status).to.have.been.calledWith(201);
+      expect(res.status).to.have.been.calledWith(200);
       expect(res.json).to.have.been.calledWith(
         sinon.match({
           message: 'Permission updated successfully'
@@ -564,9 +581,12 @@ describe('Role Endpoints', () => {
       };
 
       const findOneStub = sinon.stub(Permission, 'findOne').resolves(mockPermission as any);
+      const linkDestroyStub = sinon.stub(RolePermission, 'destroy').resolves(1);
       const auditCreateStub = sinon.stub(Audit, 'create').resolves({} as any);
 
       await deletePermissionHandler(req, res);
+
+      expect(linkDestroyStub).to.have.been.calledOnce;
 
       expect(findOneStub).to.have.been.calledWith({ where: { action: 'READ' } });
       expect(auditCreateStub).to.have.been.calledOnce;

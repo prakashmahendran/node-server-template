@@ -121,8 +121,7 @@ describe('Pub/Sub Endpoints', () => {
         expect(res.status).to.have.been.calledWith(500);
         expect(res.json).to.have.been.calledWith({
           success: false,
-          message: PUBSUB_PUBLISH_ERROR,
-          error: 'Connection failed'
+          message: PUBSUB_PUBLISH_ERROR
         });
       });
 
