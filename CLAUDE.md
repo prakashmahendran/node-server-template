@@ -49,6 +49,6 @@ Node.js >= 22 (the Docker image uses `node:22-slim`).
 
 ## Dependencies
 
-- `tmp` is only needed because published `node-server-engine` 1.x requires it without declaring it. Remove
-  it once the template uses an engine release without the Gemini `tmp` dependency.
+- Uses `node-server-engine` 2.x (Node.js >= 22) and `backend-test-tools` (devDependency only).
 - `overrides` pins Sequelize's `uuid` to a patched version.
+- Check `npm audit --omit=dev` when updating dependencies; production should stay at 0 vulnerabilities.
