@@ -10,6 +10,6 @@ export const publishTestEndpoint = new Endpoint({
   path: '/pubsub/publish',
   method: EndpointMethod.POST,
   handler: publishTestHandler,
-  authType: EndpointAuthType.NONE,
+  authType: EndpointAuthType.JWT,
   validator: publishTestValidator
 });

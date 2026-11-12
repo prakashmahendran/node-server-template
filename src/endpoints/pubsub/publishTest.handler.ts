@@ -12,8 +12,8 @@ import {
   PUBSUB_PUBLISH_ERROR
 } from './publishTest.const';
 
-export const publishTestHandler: EndpointHandler<EndpointAuthType.NONE> = async (
-  req: EndpointRequestType[EndpointAuthType.NONE],
+export const publishTestHandler: EndpointHandler<EndpointAuthType.JWT> = async (
+  req: EndpointRequestType[EndpointAuthType.JWT],
   res: Response
 ) => {
   // Check if Pub/Sub is enabled

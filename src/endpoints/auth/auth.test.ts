@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs';
 import { createMockRequest, createMockResponse } from 'test/stubs';
 import { User } from 'db/models';
 import { loginHandler } from './auth.handler';
-import { AUTH_INVALID_CREDENTIALS, AUTH_USER_NOT_FOUND, AUTH_LOGIN_ERROR } from './auth.const';
+import { AUTH_INVALID_CREDENTIALS, AUTH_USER_NOT_FOUND, AUTH_LOGIN_ERROR, AUTH_ACCOUNT_INACTIVE } from './auth.const';
 import { loginValidator } from './auth.validator';
 
 describe('Auth Endpoints', () => {
@@ -59,7 +59,8 @@ describe('Auth Endpoints', () => {
       const mockUserBasic = {
         id: '123',
         email: 'test@example.com',
-        password: 'hashedPassword'
+        password: 'hashedPassword',
+        accountStatus: 'active'
       };
 
       const mockUserDetails = {
@@ -121,7 +122,7 @@ describe('Auth Endpoints', () => {
       await loginHandler(req, res);
 
       expect(res.status).to.have.been.calledWith(401);
-      expect(res.json).to.have.been.calledWith({ message: AUTH_USER_NOT_FOUND });
+      expect(res.json).to.have.been.calledWith({ message: AUTH_INVALID_CREDENTIALS });
     });
 
     it('should return 401 when password does not match', async () => {
@@ -145,6 +146,7 @@ describe('Auth Endpoints', () => {
         id: '123',
         email: 'test@example.com',
         password: 'hashedPassword',
+        accountStatus: 'active',
         firstName: 'John',
         lastName: 'Doe',
         role: null,
@@ -181,11 +183,23 @@ describe('Auth Endpoints', () => {
 
       expect(res.status).to.have.been.calledWith(500);
       expect(res.json).to.have.been.calledWith(
-        sinon.match({
-          message: AUTH_LOGIN_ERROR,
-          error
-        })
+        { message: AUTH_LOGIN_ERROR }
       );
+    });
+
+    it('should return 403 when the account is not active', async () => {
+      findOneStub.resolves({
+        id: '123',
+        email: 'test@example.com',
+        password: 'hashedPassword',
+        accountStatus: 'suspended'
+      });
+      bcryptCompareStub.resolves(true);
+
+      await loginHandler(req, res);
+
+      expect(res.status).to.have.been.calledWith(403);
+      expect(res.json).to.have.been.calledWith({ message: AUTH_ACCOUNT_INACTIVE });
     });
 
     it('should handle bcrypt comparison error', async () => {

@@ -6,6 +6,8 @@
       This endpoint is useful for testing and debugging Pub/Sub integration.
       Requires ENABLE_PUBSUB to be set to true and PUBSUB_TOPIC to be configured.
     operationId: publishTestMessage
+    security:
+      - bearerAuth: []
     tags:
       - Pub/Sub
     requestBody:

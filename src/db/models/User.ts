@@ -60,4 +60,13 @@ export class User extends Model {
 
   @BelongsTo(() => Role)
   role!: Role;
+
+  /** Never expose the password hash when a user is serialized (API responses, audit logs...) */
+  // Same signature as Model.toJSON so callers keep their typing
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public toJSON<T = any>(): T {
+    const values = { ...(super.toJSON() as Record<string, unknown>) };
+    delete values.password;
+    return values as T;
+  }
 }

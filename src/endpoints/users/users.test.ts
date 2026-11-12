@@ -124,8 +124,7 @@ describe('Users Endpoints', () => {
       expect(res.status).to.have.been.calledWith(500);
       expect(res.json).to.have.been.calledWith(
         sinon.match({
-          message: USER_CREATION_ERROR,
-          error
+          message: USER_CREATION_ERROR
         })
       );
     });
@@ -162,8 +161,7 @@ describe('Users Endpoints', () => {
       expect(res.status).to.have.been.calledWith(500);
       expect(res.json).to.have.been.calledWith(
         sinon.match({
-          message: USER_GET_ERROR,
-          error
+          message: USER_GET_ERROR
         })
       );
     });
@@ -258,8 +256,7 @@ describe('Users Endpoints', () => {
       expect(res.status).to.have.been.calledWith(500);
       expect(res.json).to.have.been.calledWith(
         sinon.match({
-          message: USER_UPDATE_ERROR,
-          error
+          message: USER_UPDATE_ERROR
         })
       );
     });
@@ -303,8 +300,7 @@ describe('Users Endpoints', () => {
       expect(res.status).to.have.been.calledWith(500);
       expect(res.json).to.have.been.calledWith(
         sinon.match({
-          message: USER_DELETION_ERROR,
-          error
+          message: USER_DELETION_ERROR
         })
       );
     });

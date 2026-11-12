@@ -25,7 +25,7 @@ export const getRoleDetailsHandler: EndpointHandler<
   req: EndpointRequestType[EndpointAuthType.JWT],
   res: Response
 ): Promise<void> => {
-  const { roleId } = req.params;
+  const { roleId } = req.params as { roleId: string };
 
   try {
     // Fetch the role by roleId, including associated permissions
@@ -62,7 +62,7 @@ export const getRoleDetailsHandler: EndpointHandler<
     res.status(200).json(formattedRole);
   } catch (error) {
     reportError(error);
-    res.status(500).json({ message: 'Error fetching role details', error });
+    res.status(500).json({ message: 'Error fetching role details' });
   }
 };
 
@@ -101,7 +101,7 @@ export const getRolesHandler: EndpointHandler<EndpointAuthType.JWT> = async (
     res.status(200).json(formattedRoles);
   } catch (error) {
     reportError(error);
-    res.status(500).json({ message: ROLE_GET_ERROR, error });
+    res.status(500).json({ message: ROLE_GET_ERROR });
   }
 };
 
@@ -179,7 +179,7 @@ export const createRoleHandler: EndpointHandler<EndpointAuthType> = async (
       .json({ message: 'Role created successfully', role: formattedRole });
   } catch (error) {
     reportError(error);
-    res.status(500).json({ message: ROLE_CREATION_ERROR, error });
+    res.status(500).json({ message: ROLE_CREATION_ERROR });
   }
 };
 
@@ -187,7 +187,7 @@ export const updateRoleHandler: EndpointHandler<EndpointAuthType.JWT> = async (
   req: EndpointRequestType[EndpointAuthType.JWT],
   res: Response
 ): Promise<void> => {
-  const { id } = req.params;
+  const { id } = req.params as { id: string };
   const { name, description, permissions } = req.body; // permissions should now be an array of actions (strings)
   const { user } = req;
 
@@ -295,7 +295,7 @@ export const updateRoleHandler: EndpointHandler<EndpointAuthType.JWT> = async (
       .json({ message: 'Role updated successfully', role: formattedRole });
   } catch (error) {
     reportError(error);
-    res.status(500).json({ message: ROLE_UPDATE_ERROR, error });
+    res.status(500).json({ message: ROLE_UPDATE_ERROR });
   }
 };
 
@@ -304,7 +304,7 @@ export const deleteRoleHandler: EndpointHandler<EndpointAuthType.JWT> = async (
   req: EndpointRequestType[EndpointAuthType.JWT],
   res: Response
 ): Promise<void> => {
-  const { id } = req.params;
+  const { id } = req.params as { id: string };
   const { user } = req;
 
   try {
@@ -327,7 +327,7 @@ export const deleteRoleHandler: EndpointHandler<EndpointAuthType.JWT> = async (
     res.status(200).json({ message: 'Role deleted successfully' });
   } catch (error) {
     reportError(error);
-    res.status(500).json({ message: ROLE_DELETE_ERROR, error });
+    res.status(500).json({ message: ROLE_DELETE_ERROR });
   }
 };
 
@@ -362,7 +362,7 @@ export const createPermissionHandler: EndpointHandler<
     });
   } catch (error) {
     reportError(error);
-    res.status(500).json({ message: PERMISSION_CREATION_ERROR, error });
+    res.status(500).json({ message: PERMISSION_CREATION_ERROR });
   }
 };
 
@@ -380,7 +380,7 @@ export const getPermissionsHandler: EndpointHandler<
     res.status(200).json({ permissions });
   } catch (error) {
     reportError(error);
-    res.status(500).json({ message: 'Error fetching permissions', error });
+    res.status(500).json({ message: 'Error fetching permissions' });
   }
 };
 
@@ -391,7 +391,7 @@ export const updatePermissionHandler: EndpointHandler<
   req: EndpointRequestType[EndpointAuthType.JWT],
   res: Response
 ): Promise<void> => {
-  const { action } = req.params;
+  const { action } = req.params as { action: string };
   const { user } = req;
   const { groupName, description } = req.body;
 
@@ -445,7 +445,7 @@ export const updatePermissionHandler: EndpointHandler<
     });
   } catch (error) {
     reportError(error);
-    res.status(500).json({ message: PERMISSION_UPDATE_ERROR, error });
+    res.status(500).json({ message: PERMISSION_UPDATE_ERROR });
   }
 };
 
@@ -456,7 +456,7 @@ export const deletePermissionHandler: EndpointHandler<
   req: EndpointRequestType[EndpointAuthType.JWT],
   res: Response
 ): Promise<void> => {
-  const { action } = req.params;
+  const { action } = req.params as { action: string };
   const { user } = req;
 
   try {
@@ -482,6 +482,6 @@ export const deletePermissionHandler: EndpointHandler<
     res.status(200).json({ message: 'Permission deleted successfully' });
   } catch (error) {
     reportError(error);
-    res.status(500).json({ message: PERMISSION_DELETE_ERROR, error });
+    res.status(500).json({ message: PERMISSION_DELETE_ERROR });
   }
 };

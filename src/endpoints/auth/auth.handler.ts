@@ -9,10 +9,17 @@ import bcrypt from 'bcryptjs';
 import { Response } from 'express';
 import { Permission, Role, User } from 'db';
 import {
+  AUTH_ACCOUNT_INACTIVE,
   AUTH_INVALID_CREDENTIALS,
-  AUTH_LOGIN_ERROR,
-  AUTH_USER_NOT_FOUND
+  AUTH_LOGIN_ERROR
 } from './auth.const';
+
+/**
+ * Hash compared against when the user does not exist, so that the response time
+ * does not reveal whether an email is registered
+ */
+const DUMMY_PASSWORD_HASH =
+  '$2a$10$rXZGhrRiacdYFizj4MSj4.Utll6bnLO0SZcTm6X4sVFpOWuTWV11i';
 
 export const loginHandler: EndpointHandler<EndpointAuthType> = async (
   req: EndpointRequestType[EndpointAuthType],
@@ -22,18 +29,22 @@ export const loginHandler: EndpointHandler<EndpointAuthType> = async (
   try {
     const user = await User.findOne({
       where: { email },
-      attributes: ['id', 'password'],
+      attributes: ['id', 'password', 'accountStatus'],
       raw: true
     });
 
-    if (!user) {
-      res.status(401).json({ message: AUTH_USER_NOT_FOUND });
+    // Same response for unknown users and wrong passwords to prevent account enumeration
+    const isMatch = await bcrypt.compare(
+      password,
+      user?.password ?? DUMMY_PASSWORD_HASH
+    );
+    if (!user || !isMatch) {
+      res.status(401).json({ message: AUTH_INVALID_CREDENTIALS });
       return;
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      res.status(401).json({ message: AUTH_INVALID_CREDENTIALS });
+    if (user.accountStatus !== 'active') {
+      res.status(403).json({ message: AUTH_ACCOUNT_INACTIVE });
       return;
     }
 
@@ -87,6 +98,6 @@ export const loginHandler: EndpointHandler<EndpointAuthType> = async (
     res.status(200).json({ accessToken, tokenExpiry, user:transformedUser });
   } catch (error) {
     reportError(error);
-    res.status(500).json({ message: AUTH_LOGIN_ERROR, error });
+    res.status(500).json({ message: AUTH_LOGIN_ERROR });
   }
 };

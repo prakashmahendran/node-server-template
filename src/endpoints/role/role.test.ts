@@ -159,8 +159,7 @@ describe('Role Endpoints', () => {
       expect(res.status).to.have.been.calledWith(500);
       expect(res.json).to.have.been.calledWith(
         sinon.match({
-          message: 'Error fetching role details',
-          error
+          message: 'Error fetching role details'
         })
       );
     });
@@ -217,8 +216,7 @@ describe('Role Endpoints', () => {
       expect(res.status).to.have.been.calledWith(500);
       expect(res.json).to.have.been.calledWith(
         sinon.match({
-          message: ROLE_GET_ERROR,
-          error
+          message: ROLE_GET_ERROR
         })
       );
     });
@@ -296,8 +294,7 @@ describe('Role Endpoints', () => {
       expect(res.status).to.have.been.calledWith(500);
       expect(res.json).to.have.been.calledWith(
         sinon.match({
-          message: ROLE_CREATION_ERROR,
-          error
+          message: ROLE_CREATION_ERROR
         })
       );
     });
@@ -365,8 +362,7 @@ describe('Role Endpoints', () => {
       expect(res.status).to.have.been.calledWith(500);
       expect(res.json).to.have.been.calledWith(
         sinon.match({
-          message: ROLE_UPDATE_ERROR,
-          error
+          message: ROLE_UPDATE_ERROR
         })
       );
     });
@@ -413,8 +409,7 @@ describe('Role Endpoints', () => {
       expect(res.status).to.have.been.calledWith(500);
       expect(res.json).to.have.been.calledWith(
         sinon.match({
-          message: ROLE_DELETE_ERROR,
-          error
+          message: ROLE_DELETE_ERROR
         })
       );
     });
@@ -462,8 +457,7 @@ describe('Role Endpoints', () => {
       expect(res.status).to.have.been.calledWith(500);
       expect(res.json).to.have.been.calledWith(
         sinon.match({
-          message: PERMISSION_CREATION_ERROR,
-          error
+          message: PERMISSION_CREATION_ERROR
         })
       );
     });
@@ -494,8 +488,7 @@ describe('Role Endpoints', () => {
       expect(res.status).to.have.been.calledWith(500);
       expect(res.json).to.have.been.calledWith(
         sinon.match({
-          message: 'Error fetching permissions',
-          error
+          message: 'Error fetching permissions'
         })
       );
     });
@@ -555,8 +548,7 @@ describe('Role Endpoints', () => {
       expect(res.status).to.have.been.calledWith(500);
       expect(res.json).to.have.been.calledWith(
         sinon.match({
-          message: PERMISSION_UPDATE_ERROR,
-          error
+          message: PERMISSION_UPDATE_ERROR
         })
       );
     });
@@ -603,8 +595,7 @@ describe('Role Endpoints', () => {
       expect(res.status).to.have.been.calledWith(500);
       expect(res.json).to.have.been.calledWith(
         sinon.match({
-          message: PERMISSION_DELETE_ERROR,
-          error
+          message: PERMISSION_DELETE_ERROR
         })
       );
     });
