@@ -48,7 +48,8 @@
     "sequelize": "^6.37.7",
     "sequelize-typescript": "^2.1.6",
     "tmp": "^0.2.5",
-    "umzug": "^3.8.2"
+    "umzug": "^3.8.2",
+    "dotenv": "^16.4.7"
   },
   "devDependencies": {
     "@babel/cli": "^7.26.4",
