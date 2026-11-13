@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
-import { createMockRequest, createMockResponse } from 'test/stubs';
+import { createMockRequest, createMockResponse } from 'backend-test-tools';
 import { Role, Permission, RolePermission, Audit, User } from 'db/models';
 import {
   getRoleDetailsHandler,

@@ -1,8 +1,7 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 import bcrypt from 'bcryptjs';
-import { factory } from 'backend-test-tools';
-import { createMockRequest, createMockResponse, createMockModelInstance } from 'test/stubs';
+import { factory, createMockRequest, createMockResponse, createMockModelInstance } from 'backend-test-tools';
 import { User, Audit } from 'db/models';
 import {
   createUserHandler,

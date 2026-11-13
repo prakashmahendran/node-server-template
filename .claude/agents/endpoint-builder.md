@@ -16,7 +16,7 @@ You add endpoints to a service built on `node-server-engine`. Follow the existin
 | `<name>.handler.ts` | `EndpointHandler<EndpointAuthType.JWT>` functions |
 | `<name>.const.ts` | user facing messages |
 | `<name>.docs.yaml` | OpenAPI paths; authenticated routes have `security: - bearerAuth: []` |
-| `<name>.test.ts` | mocha/chai/sinon tests using `createMockRequest`/`createMockResponse` from `test/stubs` |
+| `<name>.test.ts` | mocha/chai/sinon tests using `createMockRequest`/`createMockResponse`/`createMockModelInstance` from `backend-test-tools` (hooks: `useTestServer` in `test/hooks.ts`) |
 | `index.ts` | re-exports the endpoints; add the feature to `src/endpoints/index.ts` |
 
 ## Rules

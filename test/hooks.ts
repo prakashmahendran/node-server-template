@@ -1,9 +1,8 @@
-import { Server, sequelize, runPendingMigrations } from 'node-server-engine';
+import { sequelize, runPendingMigrations } from 'node-server-engine';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import { Application } from 'express';
-import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
+import { useTestServer } from 'backend-test-tools';
 import { createServer } from 'app/createServer';
 import * as models from 'db/models';
 
@@ -11,47 +10,23 @@ chai.use(chaiAsPromised);
 chai.use(sinonChai);
 
 /**
- * Global test hooks
+ * Global test hooks: the server is created and initialised before the tests and shut down after them;
+ * process.env and sinon stubs are restored around each test.
  */
-
-// Save a copy to revert the environment variables to their original state before each test
-const savedEnv = { ...process.env };
-export let server: Server;
-export let app: Application;
-
-// Add error logging to catch unhandled errors
-process.on('unhandledRejection', (reason, promise) => {
-  console.error('❌ Unhandled Rejection at:', promise, 'reason:', reason);
-});
-
-process.on('uncaughtException', (error) => {
-  console.error('❌ Uncaught Exception:', error);
-});
-
-before(async () => {
-  server = createServer();
-
-  app = server.getApp();
-  await server.init();
-
-  await sequelize.init();
-  const modelArray = Object.values(models);
-  await sequelize.addModels(modelArray);
-  if (process.env.RUN_DB_MIGRATION?.toLowerCase() === 'true') {
-    console.log('Db Migration Started');
-    await runPendingMigrations();
+export const testServer = useTestServer(createServer, {
+  afterInit: async () => {
+    await sequelize.init();
+    sequelize.addModels(Object.values(models));
+    if (process.env.RUN_DB_MIGRATION?.toLowerCase() === 'true') {
+      await runPendingMigrations();
+    }
   }
 });
 
-beforeEach(() => {
-  process.env = { ...savedEnv };
+// Report unhandled errors instead of letting them pass silently
+process.on('unhandledRejection', (reason) => {
+  console.error('Unhandled rejection:', reason);
 });
-
-afterEach(() => {
-  // Delete all stubs and spies
-  sinon.restore();
-});
-
-after(async () => {
-  await server.shutdown();
+process.on('uncaughtException', (error) => {
+  console.error('Uncaught exception:', error);
 });

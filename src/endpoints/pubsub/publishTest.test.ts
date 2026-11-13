@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
-import { createMockRequest, createMockResponse } from 'test/stubs';
+import { createMockRequest, createMockResponse } from 'backend-test-tools';
 import { PubSub } from 'node-server-engine';
 import { publishTestHandler } from './publishTest.handler';
 import {

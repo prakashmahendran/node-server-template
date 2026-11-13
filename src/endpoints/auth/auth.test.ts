@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 import bcrypt from 'bcryptjs';
-import { createMockRequest, createMockResponse } from 'test/stubs';
+import { createMockRequest, createMockResponse } from 'backend-test-tools';
 import { User } from 'db/models';
 import { loginHandler } from './auth.handler';
 import { AUTH_INVALID_CREDENTIALS, AUTH_USER_NOT_FOUND, AUTH_LOGIN_ERROR, AUTH_ACCOUNT_INACTIVE } from './auth.const';
